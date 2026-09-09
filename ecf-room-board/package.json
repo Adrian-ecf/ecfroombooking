@@ -1,0 +1,9 @@
+{
+  "name": "ecf-room-board",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Room booking board for Edinburgh Community Food, backed by Netlify Functions and Netlify Blobs.",
+  "dependencies": {
+    "@netlify/blobs": "latest"
+  }
+}

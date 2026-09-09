@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECF Room Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FFFFFF;
+    --offwhite:#FAFAF6;
+    --ink:#22271F;
+    --ink-soft:#5A6154;
+    --green:#2E7D32;
+    --green-deep:#1B5E20;
+    --green-pale:#E7F3E8;
+    --red:#C8102E;
+    --red-deep:#8E0B21;
+    --red-pale:#FBE7E9;
+    --line:#DEDAD0;
+    --line-soft:#EEEBE2;
+    --lock-bg:#EFEDE6;
+    --lock-fg:#9B968A;
+    --radius:4px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--offwhite);
+    color:var(--ink);
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1100px;margin:0 auto;padding:28px 20px 64px;}
+
+  /* ---------- Error banner ---------- */
+  .error-banner{
+    display:none;
+    background:var(--red-pale);
+    border:1.5px solid var(--red);
+    color:var(--red-deep);
+    font-weight:700;
+    font-size:13px;
+    padding:10px 14px;
+    border-radius:var(--radius);
+    margin-bottom:16px;
+  }
+
+  /* ---------- Header ---------- */
+  .masthead{margin-bottom:22px;}
+  .masthead-top{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+    padding-bottom:14px;
+  }
+  .masthead h1{
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:800;
+    font-size:38px;
+    letter-spacing:0.2px;
+    margin:0;
+    line-height:1;
+  }
+  .masthead .tagline{
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-top:6px;
+    max-width:380px;
+  }
+  .masthead .rule-note{
+    text-align:right;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+  .masthead .rule-note strong{color:var(--ink); font-weight:800;}
+  .brand-bar{
+    height:5px;
+    display:flex;
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .brand-bar span{flex:1;}
+  .brand-bar .b1{background:var(--green);}
+  .brand-bar .b2{background:var(--red);}
+  .tz-note{
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  /* ---------- Room groups ---------- */
+  .room-groups{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    margin:22px 0 20px;
+  }
+  .room-group{min-width:220px; flex:1;}
+  .room-group .group-head{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .room-group .bar{width:22px; height:4px; border-radius:2px;}
+  .room-group.warehouse .bar{background:var(--green);}
+  .room-group.office .bar{background:var(--red);}
+  .room-group .group-head h2{
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:800;
+    font-size:16px;
+    margin:0;
+  }
+  .room-list{display:flex; flex-direction:column; gap:8px;}
+  .room-tab{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    text-align:left;
+    background:var(--white);
+    border:1.5px solid var(--line);
+    border-radius:var(--radius);
+    padding:11px 14px;
+    cursor:pointer;
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    transition:background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .room-tab:hover{border-color:var(--ink-soft);}
+  .room-tab.active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:var(--white);
+  }
+  .room-tab .dot{
+    width:8px; height:8px; border-radius:50%; flex:none; margin-right:10px;
+  }
+  .room-group.warehouse .room-tab .dot{background:var(--green);}
+  .room-group.office .room-tab .dot{background:var(--red);}
+  .room-tab.active .dot{background:var(--white);}
+  .room-tab-inner{display:flex; align-items:center;}
+
+  /* ---------- Week nav ---------- */
+  .week-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--ink);
+    color:var(--white);
+    padding:11px 16px;
+    border-radius:var(--radius);
+    margin-bottom:0;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .week-nav .range{
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:800;
+    font-size:19px;
+    letter-spacing:0.2px;
+  }
+  .week-nav .navbtns{display:flex; gap:8px; align-items:center;}
+  .week-nav button{
+    background:transparent;
+    border:1.5px solid #545C4C;
+    color:var(--white);
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:700;
+    font-size:13px;
+    padding:8px 14px;
+    border-radius:var(--radius);
+    cursor:pointer;
+  }
+  .week-nav button:hover:not(:disabled){background:#333A2C;}
+  .week-nav button:disabled{opacity:0.35; cursor:not-allowed;}
+  .week-nav .today-jump{border-color:var(--green);}
+  .week-nav .today-jump:hover:not(:disabled){background:var(--green-deep);}
+
+  /* ---------- Table ---------- */
+  .table-wrap{
+    overflow-x:auto;
+    overflow-y:auto;
+    max-height:640px;
+    border:1.5px solid var(--line);
+    border-top:none;
+    border-radius:0 0 var(--radius) var(--radius);
+    background:var(--white);
+  }
+  table{border-collapse:collapse; width:100%; min-width:680px;}
+  thead th{
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:700;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    padding:10px 6px 8px;
+    border-bottom:1.5px solid var(--line);
+    background:var(--white);
+    position:sticky;
+    top:0;
+    z-index:2;
+  }
+  thead th .dow{display:block; font-size:11px; font-weight:600; color:var(--ink-soft); margin-bottom:2px;}
+  thead th .dnum{
+    display:block;
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-size:19px;
+    font-weight:800;
+    color:var(--ink);
+  }
+  thead th.time-col-header{text-align:left; padding-left:12px;}
+  tbody th{
+    text-align:left;
+    padding:0 12px;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    border-right:1.5px solid var(--line);
+    border-bottom:1px solid var(--line-soft);
+    white-space:nowrap;
+    background:var(--white);
+    position:sticky;
+    left:0;
+    z-index:1;
+  }
+  tr.hour-row th, tr.hour-row td{border-top:1.5px solid var(--line);}
+  tbody th.hour-label{font-weight:800; font-size:12.5px; color:var(--ink);}
+  td{
+    border-bottom:1px solid var(--line-soft);
+    border-left:1px solid var(--line-soft);
+    padding:0;
+    height:30px;
+    text-align:center;
+    vertical-align:middle;
+  }
+  .cell{
+    width:100%;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    border:none;
+    background:transparent;
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:700;
+    padding:0 4px;
+  }
+  .cell.available{background:var(--white);}
+  .cell.available:hover{background:var(--green-pale);}
+  .cell.reserved{
+    background:var(--red-pale);
+    color:var(--red-deep);
+    cursor:pointer;
+  }
+  .cell.reserved:hover{background:#F5CDD2;}
+  .cell.reserved .who{
+    font-size:10.5px;
+    font-weight:700;
+    line-height:1;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .cell.locked{
+    background:repeating-linear-gradient(135deg, var(--lock-bg), var(--lock-bg) 5px, #E4E1D8 5px, #E4E1D8 10px);
+    color:var(--lock-fg);
+    cursor:not-allowed;
+    font-size:10px;
+  }
+
+  /* ---------- Legend ---------- */
+  .legend{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    margin-top:16px;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  .legend .item{display:flex; align-items:center; gap:7px;}
+  .swatch{width:14px; height:14px; border-radius:2px; flex:none;}
+  .swatch.available{background:var(--white); border:1.5px solid var(--line);}
+  .swatch.reserved{background:var(--red);}
+  .swatch.locked{background:repeating-linear-gradient(135deg, var(--lock-bg), var(--lock-bg) 4px, #E4E1D8 4px, #E4E1D8 8px);}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(34,39,31,0.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--white);
+    border-radius:var(--radius);
+    width:100%;
+    max-width:420px;
+    max-height:88vh;
+    overflow-y:auto;
+    padding:22px 22px 20px;
+    border:1.5px solid var(--line);
+  }
+  .modal h2{
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-size:22px;
+    font-weight:800;
+    margin:0 0 4px;
+  }
+  .modal .meta{
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+    padding-bottom:14px;
+    border-bottom:1.5px solid var(--line-soft);
+  }
+  .existing-list{margin-bottom:6px;}
+  .existing-list .exist-title{
+    font-size:12px;
+    font-weight:800;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .existing-item{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    font-size:13px;
+    font-weight:600;
+    padding:6px 8px;
+    background:var(--red-pale);
+    color:var(--red-deep);
+    border-radius:var(--radius);
+    margin-bottom:6px;
+  }
+  .existing-item .cancel-link{
+    background:none; border:none; color:var(--red-deep);
+    font-weight:800; font-size:12px; text-decoration:underline; cursor:pointer; flex:none;
+  }
+  .existing-empty{font-size:13px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;}
+  .divider{border:none; border-top:1.5px solid var(--line-soft); margin:16px 0;}
+  .modal label{
+    display:block;
+    font-size:12px;
+    font-weight:800;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+    margin-top:12px;
+  }
+  .modal input, .modal textarea, .modal select{
+    width:100%;
+    border:1.5px solid var(--line);
+    border-radius:var(--radius);
+    padding:9px 10px;
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    background:var(--white);
+    color:var(--ink);
+  }
+  .modal input:focus, .modal textarea:focus, .modal select:focus{
+    outline:none;
+    border-color:var(--green);
+    box-shadow:0 0 0 2px rgba(46,125,50,0.18);
+  }
+  .modal textarea{resize:vertical; min-height:56px;}
+  .time-range{display:flex; gap:10px;}
+  .time-range > div{flex:1;}
+  .modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:20px;
+    justify-content:flex-end;
+  }
+  .btn{
+    font-family:'Century Gothic','Poppins',sans-serif;
+    font-size:13.5px;
+    font-weight:800;
+    padding:9px 16px;
+    border-radius:var(--radius);
+    border:1.5px solid transparent;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--green); color:var(--white);}
+  .btn-primary:hover{background:var(--green-deep);}
+  .btn-ghost{background:transparent; border-color:var(--line); color:var(--ink-soft);}
+  .btn-ghost:hover{border-color:var(--ink-soft); color:var(--ink);}
+  .error-msg{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--red-deep);
+    margin-top:8px;
+    display:none;
+  }
+  .error-msg.show{display:block;}
+  .status-note{
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-top:14px;
+    min-height:16px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="error-banner" id="globalError"></div>
+
+  <div class="masthead">
+    <div class="masthead-top">
+      <div>
+        <h1>ECF Room Board</h1>
+        <div class="tagline">Reserve a room at Edinburgh Community Food. Bookings open from tomorrow onwards.</div>
+      </div>
+      <div class="rule-note">Earliest bookable date:<br><strong id="earliestDate">—</strong></div>
+    </div>
+    <div class="brand-bar"><span class="b1"></span><span class="b2"></span></div>
+    <div class="tz-note">Monday–Friday working week. All times shown in UK time (GMT/BST).</div>
+  </div>
+
+  <div class="room-groups" id="roomGroups"></div>
+
+  <div class="week-nav">
+    <div class="navbtns">
+      <button id="prevWeek" type="button" aria-label="Previous week">← Prev</button>
+      <button id="todayJump" type="button" class="today-jump">This week</button>
+    </div>
+    <div class="range" id="weekRange">—</div>
+    <div class="navbtns">
+      <button id="nextWeek" type="button" aria-label="Next week">Next →</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="boardTable">
+      <thead><tr id="headRow"></tr></thead>
+      <tbody id="bodyRows"></tbody>
+    </table>
+  </div>
+
+  <div class="legend">
+    <div class="item"><span class="swatch available"></span> Open — click to reserve</div>
+    <div class="item"><span class="swatch reserved"></span> Reserved</div>
+    <div class="item"><span class="swatch locked"></span> Today / past — not bookable</div>
+  </div>
+
+  <div class="status-note" id="statusNote"></div>
+</div>
+
+<!-- Booking modal -->
+<div class="overlay" id="bookOverlay">
+  <div class="modal">
+    <h2 id="bookHeading">Reserve room</h2>
+    <div class="meta" id="bookMeta">—</div>
+
+    <div class="existing-list">
+      <div class="exist-title">Already booked that day</div>
+      <div id="existingItems"></div>
+    </div>
+
+    <hr class="divider">
+
+    <form id="bookForm">
+      <div class="time-range">
+        <div>
+          <label for="startTime">Start time</label>
+          <select id="startTime"></select>
+        </div>
+        <div>
+          <label for="endTime">End time</label>
+          <select id="endTime"></select>
+        </div>
+      </div>
+      <label for="bookName">Your name</label>
+      <input type="text" id="bookName" maxlength="60" placeholder="e.g. Priya Shah">
+      <label for="bookNote">What's it for? <span style="font-weight:600;">(optional)</span></label>
+      <textarea id="bookNote" maxlength="120" placeholder="e.g. Sprint planning"></textarea>
+      <div class="error-msg" id="bookError">Enter your name to reserve this room.</div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="bookCancel">Close</button>
+        <button type="button" class="btn btn-primary" id="reserveBtn">Reserve room</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Guard against the script body running more than once if the host page
+// ever re-injects this <script> tag (some live-preview panels do this on
+// resize/refresh). Without this guard a second run would attach duplicate
+// event listeners and silently break interactions.
+if(!window.__ecfRoomBoardStarted){
+window.__ecfRoomBoardStarted = true;
+
+(function(){
+  "use strict";
+
+  function showFatalError(msg){
+    try{
+      var banner = document.getElementById('globalError');
+      if(banner){
+        banner.textContent = "Something went wrong: " + msg + ". Please tell me exactly what this message says so I can fix it.";
+        banner.style.display = "block";
+      }
+    }catch(e2){ /* nothing more we can do */ }
+  }
+  window.addEventListener('error', function(e){ showFatalError(e.message || 'unknown script error'); });
+  window.addEventListener('unhandledrejection', function(e){
+    showFatalError((e.reason && e.reason.message) ? e.reason.message : 'unhandled promise rejection');
+  });
+
+  try{
+
+  // ---------- Config ----------
+  var GROUPS = [
+    {
+      id:"warehouse", label:"Warehouse", accent:"warehouse",
+      rooms:[
+        { id:"karens-office",     name:"Karen's Office" },
+        { id:"community-kitchen", name:"Community Kitchen" }
+      ]
+    },
+    {
+      id:"office", label:"Office", accent:"office",
+      rooms:[
+        { id:"brendas-office", name:"Brenda's Office" },
+        { id:"the-cubby",      name:"The Cubby" },
+        { id:"middle-room",    name:"Middle Room" },
+        { id:"back-office",    name:"Back Office" }
+      ]
+    }
+  ];
+  var ALL_ROOMS = [];
+  GROUPS.forEach(function(g){ g.rooms.forEach(function(r){ r.groupId = g.id; ALL_ROOMS.push(r); }); });
+
+  var DAY_START_MIN = 8*60;   // 08:00
+  var DAY_END_MIN   = 18*60;  // 18:00
+  var STEP_MIN = 15;
+
+  function minToStr(mins){
+    var h = Math.floor(mins/60), mm = mins%60;
+    return String(h).padStart(2,"0")+":"+String(mm).padStart(2,"0");
+  }
+  function strToMin(t){
+    var p = t.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10);
+  }
+  function fmtTime12(t){
+    var mins = strToMin(t);
+    var h = Math.floor(mins/60), mm = mins%60;
+    var suffix = h>=12 ? "PM" : "AM";
+    var h12 = h%12===0 ? 12 : h%12;
+    return h12+(mm===0 ? "" : ":"+String(mm).padStart(2,"0"))+" "+suffix;
+  }
+
+  var TIME_ROWS = [];
+  for(var m=DAY_START_MIN; m<DAY_END_MIN; m+=STEP_MIN){ TIME_ROWS.push(minToStr(m)); }
+
+  var DOW = ["Mon","Tue","Wed","Thu","Fri"];
+  var API_URL = "/.netlify/functions/reservations";
+
+  // ---------- State ----------
+  var state = {
+    currentRoom: ALL_ROOMS[0].id,
+    weekStart: null,   // Date, Monday
+    reservations: [],  // {id, roomId, date, startMin, endMin, name, note}
+    backendOk: true
+  };
+
+  // ---------- Date helpers ----------
+  function stripTime(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(d, n){ var r = new Date(d); r.setDate(r.getDate()+n); return r; }
+  function toISO(d){
+    var y=d.getFullYear(), mo=String(d.getMonth()+1).padStart(2,"0"), da=String(d.getDate()).padStart(2,"0");
+    return y+"-"+mo+"-"+da;
+  }
+  function getMonday(d){
+    var day = d.getDay();
+    var diff = (day===0 ? -6 : 1-day);
+    return addDays(stripTime(d), diff);
+  }
+  function fmtMonthDay(d){ return d.toLocaleDateString('en-GB',{month:"short", day:"numeric"}); }
+  function fmtMonthDayYear(d){ return d.toLocaleDateString('en-GB',{month:"short", day:"numeric", year:"numeric"}); }
+
+  var TODAY = stripTime(new Date());
+  var MIN_BOOKABLE = addDays(TODAY, 1);
+
+  function dayState(dateObj){
+    if(dateObj.getTime() < TODAY.getTime()) return "past";
+    if(dateObj.getTime() === TODAY.getTime()) return "today";
+    return "future";
+  }
+
+  // ---------- Backend (Netlify Function + Netlify Blobs) ----------
+  function apiRequest(method, url, bodyObj){
+    var opts = { method: method, headers: {} };
+    if(bodyObj !== undefined){
+      opts.headers["Content-Type"] = "application/json";
+      opts.body = JSON.stringify(bodyObj);
+    }
+    return fetch(url, opts).then(function(res){
+      return res.json().catch(function(){ return {}; }).then(function(data){
+        return { ok: res.ok, status: res.status, data: data };
+      });
+    });
+  }
+  function loadReservations(){
+    return apiRequest("GET", API_URL)
+      .then(function(result){
+        if(!result.ok) throw new Error((result.data && result.data.error) || ("HTTP "+result.status));
+        state.reservations = result.data || [];
+        state.backendOk = true;
+      })
+      .catch(function(err){
+        state.reservations = [];
+        state.backendOk = false;
+        showFatalError("Couldn't load reservations from the server — " + err.message);
+      });
+  }
+
+  // ---------- Rendering: room groups ----------
+  function renderRoomGroups(){
+    var wrap = document.getElementById("roomGroups");
+    wrap.innerHTML = "";
+    GROUPS.forEach(function(group){
+      var col = document.createElement("div");
+      col.className = "room-group " + group.accent;
+
+      var head = document.createElement("div");
+      head.className = "group-head";
+      head.innerHTML = '<span class="bar"></span><h2>'+group.label+'</h2>';
+      col.appendChild(head);
+
+      var list = document.createElement("div");
+      list.className = "room-list";
+      group.rooms.forEach(function(room){
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "room-tab" + (room.id===state.currentRoom ? " active" : "");
+        btn.setAttribute("data-room-id", room.id);
+        btn.innerHTML = '<span class="room-tab-inner"><span class="dot"></span>'+room.name+'</span>';
+        list.appendChild(btn);
+      });
+      col.appendChild(list);
+      wrap.appendChild(col);
+    });
+  }
+  // Delegated once — survives every re-render of #roomGroups.
+  document.getElementById("roomGroups").addEventListener("click", function(e){
+    try{
+      var btn = e.target.closest("button.room-tab");
+      if(!btn) return;
+      state.currentRoom = btn.getAttribute("data-room-id");
+      renderRoomGroups();
+      renderTable();
+    }catch(err){ showFatalError(err.message || String(err)); }
+  });
+
+  function roomById(id){
+    for(var i=0;i<ALL_ROOMS.length;i++){ if(ALL_ROOMS[i].id===id) return ALL_ROOMS[i]; }
+    return null;
+  }
+  function currentRoomLabel(roomId){
+    var r = roomById(roomId);
+    if(!r) return "";
+    var g = GROUPS.filter(function(x){return x.id===r.groupId;})[0];
+    return r.name + " (" + g.label + ")";
+  }
+
+  // ---------- Rendering: week nav + table ----------
+  function renderWeekNav(){
+    var end = addDays(state.weekStart, 4);
+    document.getElementById("weekRange").textContent = fmtMonthDay(state.weekStart) + " – " + fmtMonthDayYear(end);
+    var thisWeekMonday = getMonday(TODAY);
+    document.getElementById("prevWeek").disabled = state.weekStart.getTime() <= thisWeekMonday.getTime();
+  }
+
+  function renderTableHead(){
+    var headRow = document.getElementById("headRow");
+    headRow.innerHTML = '<th class="time-col-header">Time</th>';
+    for(var i=0;i<5;i++){
+      var d = addDays(state.weekStart, i);
+      var th = document.createElement("th");
+      th.innerHTML = '<span class="dow">'+DOW[i]+'</span><span class="dnum">'+fmtMonthDay(d)+'</span>';
+      headRow.appendChild(th);
+    }
+  }
+
+  function reservationsFor(roomId, dateISO){
+    return state.reservations.filter(function(r){ return r.roomId===roomId && r.date===dateISO; })
+      .sort(function(a,b){ return a.startMin - b.startMin; });
+  }
+  function reservationAtSlot(roomId, dateISO, slotStartMin){
+    var list = reservationsFor(roomId, dateISO);
+    for(var i=0;i<list.length;i++){
+      var r = list[i];
+      if(slotStartMin < r.endMin && r.startMin < slotStartMin+STEP_MIN) return r;
+    }
+    return null;
+  }
+
+  function renderTableBody(){
+    var body = document.getElementById("bodyRows");
+    body.innerHTML = "";
+    var lastResId = [null,null,null,null,null];
+
+    TIME_ROWS.forEach(function(time){
+      var mins = strToMin(time);
+      var isHour = (mins % 60 === 0);
+      var tr = document.createElement("tr");
+      if(isHour) tr.className = "hour-row";
+
+      var th = document.createElement("th");
+      th.className = isHour ? "hour-label" : "";
+      th.textContent = isHour ? fmtTime12(time) : "";
+      tr.appendChild(th);
+
+      for(var i=0;i<5;i++){
+        var dateObj = addDays(state.weekStart, i);
+        var dateISO = toISO(dateObj);
+        var dState = dayState(dateObj);
+        var td = document.createElement("td");
+        var cell = document.createElement("button");
+        cell.type = "button";
+        cell.setAttribute("data-date", dateISO);
+        cell.setAttribute("data-min", String(mins));
+
+        if(dState !== "future"){
+          cell.className = "cell locked";
+          cell.disabled = true;
+          if(isHour) cell.textContent = (dState==="today") ? "Today" : "Past";
+          lastResId[i] = null;
+        } else {
+          var res = reservationAtSlot(state.currentRoom, dateISO, mins);
+          cell.setAttribute("data-action","open");
+          if(res){
+            cell.className = "cell reserved";
+            if(lastResId[i] !== res.id){
+              cell.innerHTML = '<span class="who">'+escapeHtml(res.name)+'</span>';
+              lastResId[i] = res.id;
+            }
+          } else {
+            cell.className = "cell available";
+            cell.setAttribute("aria-label", "Reserve "+time+" on "+fmtMonthDay(dateObj));
+            lastResId[i] = null;
+          }
+        }
+        td.appendChild(cell);
+        tr.appendChild(td);
+      }
+      body.appendChild(tr);
+    });
+  }
+  // Delegated once on the tbody — every cell's click is caught here, so a
+  // fresh listener never has to be (re)attached to each of the 200 cells.
+  document.getElementById("bodyRows").addEventListener("click", function(e){
+    try{
+      var btn = e.target.closest("button.cell");
+      if(!btn || btn.disabled) return;
+      if(btn.getAttribute("data-action") !== "open") return;
+      var dateISO = btn.getAttribute("data-date");
+      var mins = parseInt(btn.getAttribute("data-min"),10);
+      var dateObj = new Date(dateISO+"T00:00:00");
+      openBookModal(state.currentRoom, dateISO, dateObj, mins);
+    }catch(err){ showFatalError(err.message || String(err)); }
+  });
+
+  function escapeHtml(str){
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderTable(){
+    renderWeekNav();
+    renderTableHead();
+    renderTableBody();
+  }
+
+  // ---------- Time selects (15-minute increments) ----------
+  function populateStartSelect(defaultMin){
+    var sel = document.getElementById("startTime");
+    sel.innerHTML = "";
+    for(var m=DAY_START_MIN; m<DAY_END_MIN; m+=STEP_MIN){
+      var opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = fmtTime12(minToStr(m));
+      if(m===defaultMin) opt.selected = true;
+      sel.appendChild(opt);
+    }
+  }
+  function populateEndSelect(startMin, defaultMin){
+    var sel = document.getElementById("endTime");
+    sel.innerHTML = "";
+    for(var m=startMin+STEP_MIN; m<=DAY_END_MIN; m+=STEP_MIN){
+      var opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = (m===DAY_END_MIN) ? "6:00 PM" : fmtTime12(minToStr(m));
+      if(m===defaultMin) opt.selected = true;
+      sel.appendChild(opt);
+    }
+  }
+
+  // ---------- Booking modal ----------
+  var modalCtx = null;
+  function openBookModal(roomId, dateISO, dateObj, clickedMin){
+    modalCtx = { roomId:roomId, dateISO:dateISO };
+    document.getElementById("bookHeading").textContent = "Reserve room";
+    document.getElementById("bookMeta").textContent =
+      currentRoomLabel(roomId) + " — " + dateObj.toLocaleDateString('en-GB',{weekday:"long", month:"short", day:"numeric"});
+
+    renderExistingList(roomId, dateISO);
+
+    var startDefault = clickedMin;
+    var endDefault = Math.min(clickedMin+60, DAY_END_MIN);
+    populateStartSelect(startDefault);
+    populateEndSelect(startDefault, endDefault);
+
+    document.getElementById("startTime").onchange = function(){
+      var s = parseInt(this.value,10);
+      populateEndSelect(s, Math.min(s+60, DAY_END_MIN));
+    };
+
+    document.getElementById("bookName").value = "";
+    document.getElementById("bookNote").value = "";
+    document.getElementById("bookError").classList.remove("show");
+    document.getElementById("bookOverlay").classList.add("open");
+    setTimeout(function(){ document.getElementById("bookName").focus(); }, 0);
+  }
+  function renderExistingList(roomId, dateISO){
+    var holder = document.getElementById("existingItems");
+    var list = reservationsFor(roomId, dateISO);
+    if(list.length===0){
+      holder.innerHTML = '<div class="existing-empty">Nothing booked yet — the room is free all day.</div>';
+      return;
+    }
+    holder.innerHTML = "";
+    list.forEach(function(r){
+      var row = document.createElement("div");
+      row.className = "existing-item";
+      row.innerHTML = '<span>'+fmtTime12(minToStr(r.startMin))+' – '+fmtTime12(minToStr(r.endMin))+' · '+escapeHtml(r.name)+
+        (r.note ? ' <span style="font-weight:600;">('+escapeHtml(r.note)+')</span>' : '') +'</span>';
+      var cancelBtn = document.createElement("button");
+      cancelBtn.type = "button";
+      cancelBtn.className = "cancel-link";
+      cancelBtn.textContent = "Cancel";
+      cancelBtn.setAttribute("data-cancel-id", r.id);
+      row.appendChild(cancelBtn);
+      holder.appendChild(row);
+    });
+  }
+  document.getElementById("existingItems").addEventListener("click", function(e){
+    try{
+      var btn = e.target.closest("button.cancel-link");
+      if(!btn) return;
+      cancelReservation(btn.getAttribute("data-cancel-id"));
+    }catch(err){ showFatalError(err.message || String(err)); }
+  });
+
+  function closeBookModal(){
+    document.getElementById("bookOverlay").classList.remove("open");
+    modalCtx = null;
+  }
+  document.getElementById("bookCancel").addEventListener("click", closeBookModal);
+  document.getElementById("bookOverlay").addEventListener("click", function(e){
+    if(e.target===this) closeBookModal();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key==="Escape") closeBookModal();
+  });
+
+  function submitBooking(){
+    if(!modalCtx) return;
+
+    var name = document.getElementById("bookName").value.trim();
+    if(!name){ showBookError("Enter your name to reserve this room."); return; }
+
+    var startMin = parseInt(document.getElementById("startTime").value,10);
+    var endMin = parseInt(document.getElementById("endTime").value,10);
+    if(!(endMin > startMin)){ showBookError("End time must be after the start time."); return; }
+
+    var note = document.getElementById("bookNote").value.trim();
+    var payload = {
+      roomId: modalCtx.roomId,
+      date: modalCtx.dateISO,
+      startMin: startMin,
+      endMin: endMin,
+      name: name,
+      note: note
+    };
+
+    var btn = document.getElementById("reserveBtn");
+    btn.disabled = true;
+    btn.textContent = "Reserving…";
+
+    apiRequest("POST", API_URL, payload)
+      .then(function(result){
+        if(!result.ok){
+          showBookError((result.data && result.data.error) || "Couldn't reserve that slot. Try again.");
+          return;
+        }
+        state.reservations = result.data;
+        renderTable();
+        closeBookModal();
+        setStatus("Reserved "+fmtTime12(minToStr(startMin))+" – "+fmtTime12(minToStr(endMin))+" on "+payload.date+" for "+name+".");
+      })
+      .catch(function(err){ showFatalError(err.message || String(err)); })
+      .finally(function(){
+        btn.disabled = false;
+        btn.textContent = "Reserve room";
+      });
+  }
+  document.getElementById("reserveBtn").addEventListener("click", submitBooking);
+  document.getElementById("bookForm").addEventListener("submit", function(e){ e.preventDefault(); submitBooking(); });
+  document.getElementById("bookName").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); submitBooking(); }
+  });
+
+  function showBookError(msg){
+    var el = document.getElementById("bookError");
+    el.textContent = msg;
+    el.classList.add("show");
+  }
+
+  function cancelReservation(id){
+    var existing = state.reservations.find(function(r){ return r.id===id; });
+    if(!existing) return;
+    apiRequest("DELETE", API_URL + "?id=" + encodeURIComponent(id))
+      .then(function(result){
+        if(!result.ok){
+          setStatus((result.data && result.data.error) || "Couldn't cancel that reservation. Try again.");
+          return;
+        }
+        state.reservations = result.data;
+        renderTable();
+        if(modalCtx) renderExistingList(modalCtx.roomId, modalCtx.dateISO);
+        setStatus("Cancelled the reservation for "+existing.name+".");
+      })
+      .catch(function(err){ showFatalError(err.message || String(err)); });
+  }
+
+  function setStatus(msg){
+    document.getElementById("statusNote").textContent = msg;
+  }
+
+  // ---------- Week nav wiring ----------
+  document.getElementById("prevWeek").addEventListener("click", function(){
+    try{
+      var thisWeekMonday = getMonday(TODAY);
+      var prev = addDays(state.weekStart, -7);
+      if(prev.getTime() < thisWeekMonday.getTime()) prev = thisWeekMonday;
+      state.weekStart = prev;
+      renderTable();
+    }catch(err){ showFatalError(err.message || String(err)); }
+  });
+  document.getElementById("nextWeek").addEventListener("click", function(){
+    try{
+      state.weekStart = addDays(state.weekStart, 7);
+      renderTable();
+    }catch(err){ showFatalError(err.message || String(err)); }
+  });
+  document.getElementById("todayJump").addEventListener("click", function(){
+    try{
+      state.weekStart = getMonday(TODAY);
+      renderTable();
+    }catch(err){ showFatalError(err.message || String(err)); }
+  });
+
+  // ---------- Init ----------
+  function init(){
+    document.getElementById("earliestDate").textContent = fmtMonthDayYear(MIN_BOOKABLE);
+    state.weekStart = getMonday(TODAY);
+    renderRoomGroups();
+    renderTable();
+    setStatus("Loading reservations…");
+    loadReservations().then(function(){
+      renderTable();
+      setStatus(state.backendOk ? "" : "Couldn't reach the server — showing an empty board until it's back.");
+    });
+  }
+
+  init();
+
+  }catch(err){
+    showFatalError(err.message || String(err));
+  }
+})();
+
+} // end init guard
+</script>
+</body>
+</html>
